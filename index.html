@@ -64,7 +64,7 @@
             "priceCurrency": "USD"
         },
         "softwareVersion": "1.0",
-        "downloadUrl": "https://github.com/kunaljaykam/desuruproject"
+        "downloadUrl": "https://github.com/desuruproject/desuru"
     }
     </script>
     <style>
@@ -193,6 +193,60 @@
             color: #fde047;
         }
 
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.6rem;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            color: #ffffff;
+            font-family: 'Courier New', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #facc15;
+        }
+
+        .code-container {
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            background: #facc15;
+            color: #000;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-family: 'Courier New', 'Monaco', monospace;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .copy-btn:hover {
+            background: #fde047;
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+
         @media (max-width: 640px) {
             body {
                 font-size: 16px;
@@ -218,17 +272,36 @@
         <header class="header">
             <h1 class="logo">desuru</h1>
             <p class="tagline">making deployment simple</p>
-            <a href="https://github.com/kunaljaykam/desuruproject" target="_blank" class="github">github →</a>
+            <a href="https://github.com/desuruproject/desuru" target="_blank" class="github">github →</a>
         </header>
 
         <section class="section">
             <h2>Deploy in one command</h2>
-            <div class="code-block">
-<span class="command">curl -sSL</span> https://your-domain.com/desuru.sh <span class="command">| sudo bash -s --</span> \<br>
-  <span class="flag">--app</span> myapp \<br>
-  <span class="flag">--domain</span> example.com \<br>
+            
+            <div class="input-group">
+                <label for="appName">App name:</label>
+                <input type="text" id="appName" placeholder="myapp" value="myapp">
+            </div>
+            
+            <div class="input-group">
+                <label for="domain">Domain:</label>
+                <input type="text" id="domain" placeholder="example.com" value="example.com">
+            </div>
+            
+            <div class="input-group">
+                <label for="email">Email (for SSL):</label>
+                <input type="email" id="email" placeholder="admin@example.com" value="admin@example.com">
+            </div>
+            
+            <div class="code-container">
+                <div class="code-block" id="command">
+<span class="command">curl -sSL</span> https://raw.githubusercontent.com/desuruproject/desuru/refs/heads/main/desuru.sh <span class="command">| sudo bash -s --</span> \<br>
+  <span class="flag">--app</span> <span id="appNameOutput">myapp</span> \<br>
+  <span class="flag">--domain</span> <span id="domainOutput">example.com</span> \<br>
   <span class="flag">--ssl</span> \<br>
-  <span class="flag">--email</span> admin@example.com
+  <span class="flag">--email</span> <span id="emailOutput">admin@example.com</span>
+                </div>
+                <button class="copy-btn" onclick="copyCommand()">Copy</button>
             </div>
         </section>
 
@@ -267,5 +340,57 @@
             <p>a project by <a href="https://kunaljaykam.com" target="_blank">kunaljaykam</a></p>
         </footer>
     </div>
+
+    <script>
+        // Update command in real-time
+        function updateCommand() {
+            const appName = document.getElementById('appName').value || 'myapp';
+            const domain = document.getElementById('domain').value || 'example.com';
+            const email = document.getElementById('email').value || 'admin@example.com';
+            
+            document.getElementById('appNameOutput').textContent = appName;
+            document.getElementById('domainOutput').textContent = domain;
+            document.getElementById('emailOutput').textContent = email;
+        }
+
+        // Copy command to clipboard
+        async function copyCommand() {
+            const appName = document.getElementById('appName').value || 'myapp';
+            const domain = document.getElementById('domain').value || 'example.com';
+            const email = document.getElementById('email').value || 'admin@example.com';
+            
+            const command = `curl -sSL https://raw.githubusercontent.com/desuruproject/desuru/refs/heads/main/desuru.sh | sudo bash -s -- --app ${appName} --domain ${domain} --ssl --email ${email}`;
+            
+            try {
+                await navigator.clipboard.writeText(command);
+                const btn = document.querySelector('.copy-btn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 1000);
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = command;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const btn = document.querySelector('.copy-btn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 1000);
+            }
+        }
+
+        // Add event listeners
+        document.getElementById('appName').addEventListener('input', updateCommand);
+        document.getElementById('domain').addEventListener('input', updateCommand);
+        document.getElementById('email').addEventListener('input', updateCommand);
+    </script>
 </body>
 </html>
