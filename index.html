@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Desuru - One-command deployment for JavaScript apps</title>
+    <meta name="title" content="Desuru - One-command deployment for JavaScript apps">
+    <meta name="description" content="Deploy React, Node.js, and other JavaScript applications to Ubuntu servers with a single command. Uses PM2, Nginx, and Let's Encrypt for production-ready deployments.">
+    <meta name="keywords" content="deploy, deployment, javascript, react, nodejs, ubuntu, server, pm2, nginx, ssl, one-command, devops">
+    <meta name="author" content="kunaljaykam">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://desuru.com/">
+    <meta property="og:title" content="Desuru - One-command deployment for JavaScript apps">
+    <meta property="og:description" content="Deploy React, Node.js, and other JavaScript applications to Ubuntu servers with a single command. Production-ready with PM2, Nginx, and SSL.">
+    <meta property="og:image" content="https://desuru.com/og-image.png">
+    <meta property="og:site_name" content="Desuru">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://desuru.com/">
+    <meta property="twitter:title" content="Desuru - One-command deployment for JavaScript apps">
+    <meta property="twitter:description" content="Deploy React, Node.js, and other JavaScript applications to Ubuntu servers with a single command. Production-ready with PM2, Nginx, and SSL.">
+    <meta property="twitter:image" content="https://desuru.com/og-image.png">
+    <meta property="twitter:creator" content="@kunaljaykam">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://desuru.com/">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Desuru",
+        "description": "One-command deployment tool for JavaScript applications",
+        "url": "https://desuru.com",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Ubuntu, Linux",
+        "programmingLanguage": "JavaScript",
+        "author": {
+            "@type": "Person",
+            "name": "kunaljaykam",
+            "url": "https://kunaljaykam.com"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "softwareVersion": "1.0",
+        "downloadUrl": "https://github.com/kunaljaykam/desuruproject"
+    }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', 'Monaco', 'Lucida Console', monospace;
+            line-height: 1.6;
+            color: #ffffff;
+            background: #1a1a1a;
+            min-height: 100vh;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-family: 'VT323', monospace;
+            font-size: 4rem;
+            font-weight: 400;
+            color: #ff4444;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: #888;
+            margin-bottom: 1.5rem;
+        }
+
+        .github {
+            color: #4a9eff;
+            text-decoration: underline;
+            font-size: 0.95rem;
+        }
+
+        .github:hover {
+            color: #66b3ff;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section h2 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .code-block {
+            background: #0d1117;
+            color: #e6edf3;
+            padding: 1.2rem;
+            border-radius: 6px;
+            font-family: 'Courier New', 'Monaco', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #30363d;
+        }
+
+        .command {
+            color: #facc15;
+        }
+
+        .flag {
+            color: #fbbf24;
+        }
+
+        .steps {
+            list-style: none;
+            padding: 0;
+        }
+
+        .steps li {
+            padding: 0.3rem 0;
+            color: #ccc;
+        }
+
+        .steps li::before {
+            content: "• ";
+            color: #facc15;
+            font-weight: bold;
+        }
+
+        .tech {
+            color: #888;
+            font-size: 0.95rem;
+        }
+
+        .tech strong {
+            color: #facc15;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #555;
+            border-top: 1px solid #30363d;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: #facc15;
+            text-decoration: underline;
+        }
+
+        .footer a:hover {
+            color: #fde047;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                font-size: 16px;
+            }
+            
+            .container {
+                padding: 2rem 1rem;
+            }
+            
+            .logo {
+                font-size: 3rem;
+            }
+            
+            .code-block {
+                font-size: 1rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">desuru</h1>
+            <p class="tagline">making deployment simple</p>
+            <a href="https://github.com/kunaljaykam/desuruproject" target="_blank" class="github">github →</a>
+        </header>
+
+        <section class="section">
+            <h2>Deploy in one command</h2>
+            <div class="code-block">
+<span class="command">curl -sSL</span> https://your-domain.com/desuru.sh <span class="command">| sudo bash -s --</span> \<br>
+  <span class="flag">--app</span> myapp \<br>
+  <span class="flag">--domain</span> example.com \<br>
+  <span class="flag">--ssl</span> \<br>
+  <span class="flag">--email</span> admin@example.com
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Requirements</h2>
+            <ul class="steps">
+                <li>Ubuntu server</li>
+                <li>Domain pointing to server</li>
+                <li>Your app code</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>What it does</h2>
+            <ul class="steps">
+                <li>Detects your framework</li>
+                <li>Installs Node.js, PM2, Nginx</li>
+                <li>Builds your app</li>
+                <li>Sets up SSL</li>
+                <li>Configures firewall</li>
+                <li>Starts your app</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Tech stack</h2>
+            <p class="tech"><strong>PM2</strong> process manager • <strong>Nginx</strong> web server • <strong>Let's Encrypt</strong> SSL • <strong>UFW</strong> firewall</p>
+        </section>
+
+        <section class="section">
+            <h2>Tested on</h2>
+            <p class="tech">Ubuntu with React and Node.js apps</p>
+        </section>
+
+        <footer class="footer">
+            <p>a project by <a href="https://kunaljaykam.com" target="_blank">kunaljaykam</a></p>
+        </footer>
+    </div>
+</body>
+</html>
